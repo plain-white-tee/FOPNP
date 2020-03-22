@@ -39,3 +39,32 @@ Neither of these two approaches are a form of security. Packets can still be spo
 
 #### Request IDs: A Good Idea
 
+Added ID's to requests and responses helps avoid requests and responses getting out of sync and helps avoid spoofing.
+
+#### Binding to Interfaces
+
+Binding to an interface (ex: 192.168.0.1) limits which external hosts can communicate with the server, but programs running locally can communicate with any of the machines interfaces they want.
+
+The IP stack thinks in terms of UDP 'socket names' which are always a pair linking an IP address and port number.
+
+#### UDP Fragmentation
+
+`big_sender.py` checks for MTU and prints an error if the packet exceeds it.
+
+#### Socket Options
+
+Options are accessed through the methods `getsockopt()` and `setsockopt()`<br>
+Check the man pages for `socket`, `udp` and `tcp`.
+
+Options are OS specific. Common ones are:<br>
+`SO_BROADCAST`: allows broadcast UDP packets to be sent and received<br>
+`SO_DONTROUTE`: only allows packets to be sent to hosts on subnets the computer is directly connected to (ie. no gateway needed)<br>
+`SO_TYPE`: when passed to `getsockopt()` returns socket type - `SOCK_DGRAM` or `SOCK_STREAM`
+
+#### Broadcast
+
+`udp_broadcast.py` shows how to configure a socket to send on the broadcast address.<br>
+`python3 udp_broadcast.py client "<broadcast>"` after the server is started, the client can send to the broadcast address and the server will receive it, and so will any other servers running on the same subnet.
+
+### Chapter 3 - TCP
+
