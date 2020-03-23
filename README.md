@@ -68,3 +68,28 @@ Options are OS specific. Common ones are:<br>
 
 ### Chapter 3 - TCP
 
+It takes three packets to setup a TCP connection - SYN, SYN-ACK, ACK.<br>
+Another series are required to close a connection - FIN, FIN-ACK, ACK or a pair of FIN and ACK packets in each direction.
+
+Active TCP sockets are described by the four-part coordinates: `(local_ip, local_port, remote_ip, remote_port)`<br>
+This is how the OS keeps track of every active connections source and destination.
+
+`tcp_sixteen.py` shows a simple TCP client and server.<br>
+Unlike UDP, where `connect()` is only a local operation that takes place in memory, with TCP, `connect()` is a network operation that starts the three-way handshake.
+
+`send()` and `recv()` are different in TCP. In UDP they either send or receive a datagram, which either arrives or doesn't. But TCP sends data in streams, and can split data into different size packets and reassemble them on the receiving end.
+
+`send()` might not be able to send all of the data you give it. If it can't it will return the number of bytes sent. So `send()` needs to be inside of a loop to make sure it has sent everything. Something like this:<br>
+```
+bytes_sent = 0
+while bytes_sent < len(message):
+    message_remaining = message[bytes_sent:]
+    bytes_sent += s.send(message_remaining)
+```
+
+`socket` provies the `sendall()` method, which handles all of this.<br>
+But, there is no equivalent wrapper for `recv()` which is why it has to be inside of a loop. In this case, the `recvall()` loop.
+
+#### One Socket per Conversation
+
+
